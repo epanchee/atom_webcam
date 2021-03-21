@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 from datetime import datetime
 from time import sleep
 from urllib.parse import quote
@@ -49,7 +50,7 @@ REQ2_HEADERS = {
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Dest': 'empty'
 }
-img_name_template = '/tmp/atom.{0}.jpg'
+img_name_template = '/tmp/data/atom.{0}.jpg'
 
 
 def main():
@@ -57,7 +58,6 @@ def main():
     req = Request(method='GET', params=GET_PARAMS, url=URL, headers=REQ_HEADERS)
     preped = req.prepare()
     preped.url = preped.url.replace('%25', '%')
-    print(preped.url)
     response = s.send(preped)
 
     try:
@@ -71,7 +71,8 @@ def main():
                                  cookies=cookies)
         resp_obj = json.loads(response.content.decode())
         imgdata = base64.b64decode(resp_obj['SnapshotImg'])
-        with open(img_name_template.format(datetime.now().timestamp()), 'wb') as f:
+        os.makedirs(img_name_template[:img_name_template.rindex('/')], exist_ok=True)
+        with open(img_name_template.format(int(datetime.now().timestamp())), 'wb') as f:
             f.write(imgdata)
     except Exception as e:
         print(e)
