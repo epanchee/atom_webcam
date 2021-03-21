@@ -1,0 +1,15 @@
+[Unit]
+Description=Atom WebCam images saver
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=$USER
+ExecStart=/usr/bin/python $WORKDIR/run.py -i $INTERVAL -d $SAVE_PATH
+PIDFile=$WORKDIR/atom.pid
+TimeoutSec=10
+
+[Install]
+WantedBy=multi-user.target
