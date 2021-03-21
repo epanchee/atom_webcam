@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import os
+import sys
 from datetime import datetime
 from time import sleep
 from urllib.parse import quote
@@ -53,19 +54,30 @@ DEBUG = False
 log = None
 
 
+class StdoutRedirector:
+    def __init__(self, logger=None, *args):
+        self.logger = logger
+
+    def write(self, data):
+        data = data.strip()
+        if data:
+            self.logger.debug(data)
+
+    def flush(self, data):
+        self.write(data)
+
+
 def setup_logger(debug=False, name=''):
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG if debug else logging.INFO)
+    log_level = logging.DEBUG if debug else logging.INFO
+    sh = logging.StreamHandler()
+    fh = logging.FileHandler('/var/log/atom_webcam.log')
+    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s', level=log_level,
+                        handlers=[sh, fh])
     if debug:
         from http.client import HTTPConnection
         HTTPConnection.debuglevel = 1
-    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s',
-                        filename='/var/log/atom_webcam.log')
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG if debug else logging.INFO)
-    formatter = logging.Formatter('%(name)s: %(asctime)s %(message)s')
-    console.setFormatter(formatter)
-    logger.addHandler(console)
+        sys.stdout = StdoutRedirector(logger=logger)
     return logger
 
 
