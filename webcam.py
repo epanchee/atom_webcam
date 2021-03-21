@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import os
 from datetime import datetime
 from time import sleep
@@ -9,9 +10,6 @@ import urllib3
 from requests import Request, Session
 
 urllib3.util.url.QUERY_CHARS |= {'%'}
-
-# from http.client import HTTPConnection
-# HTTPConnection.debuglevel = 1
 
 MAIN_URL = 'https://www.atomstroy.net'
 SRC_URL = f'{MAIN_URL}/zhilaya_nedvizhimost/art-gorod-park'
@@ -51,14 +49,28 @@ REQ2_HEADERS = {
     'Sec-Fetch-Dest': 'empty'
 }
 DATA_PATH = '/tmp/data'
-img_name_template = f'{DATA_PATH}/atom.{0}.jpg'
+img_name_template = f'{DATA_PATH}/atom.{{0}}.jpg'
+DEBUG = False
+log = None
+
+
+def setup_logger(debug=False):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG if debug else logging.INFO)
+    if debug:
+        from http.client import HTTPConnection
+        HTTPConnection.debuglevel = 1
+    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s')
+    return logger
 
 
 def main():
+    log = setup_logger(DEBUG)
     s = Session()
     req = Request(method='GET', params=GET_PARAMS, url=URL, headers=REQ_HEADERS)
     preped = req.prepare()
     preped.url = preped.url.replace('%25', '%')
+    log.debug("Делаем первый запрос, чтобы установить куки")
     s.send(preped)
 
     try:
@@ -68,14 +80,18 @@ def main():
         }
         sleep(0.1)
         req = Request(method='POST', url=f'{ORIGIN}/updimg', data=post_data, headers=REQ2_HEADERS)
+        log.debug("Делаем второй запрос, чтобы получить картинку")
         response = s.send(req.prepare())
         resp_obj = json.loads(response.content.decode())
         imgdata = base64.b64decode(resp_obj['SnapshotImg'])
         os.makedirs(img_name_template[:img_name_template.rindex('/')], exist_ok=True)
-        with open(img_name_template.format(int(datetime.now().timestamp())), 'wb') as f:
+        img_path = img_name_template.format(int(datetime.now().timestamp()))
+        log.debug(f"Сохраняем картинку в {img_path}")
+        with open(img_path, 'wb') as f:
             f.write(imgdata)
+        log.debug("Готово")
     except Exception as e:
-        print(e)
+        log.error(e)
 
 
 if __name__ == '__main__':
