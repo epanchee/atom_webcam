@@ -8,6 +8,9 @@ from urllib.parse import quote
 import requests
 from requests import Request, Session
 
+import urllib3
+urllib3.util.url.QUERY_CHARS |= {'%'}
+
 # from http.client import HTTPConnection
 # HTTPConnection.debuglevel = 1
 
