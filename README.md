@@ -7,3 +7,8 @@
 ./install.sh dietpi 300 --debug
 
 --debug пишем, если нужно логирование
+
+###Полезное
+
+Забиндить папку с фотками на другой диск (пример)  
+`mount --bind /mnt/toshiba/Media/atom /opt/atom_webcam/data/`
