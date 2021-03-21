@@ -5,10 +5,9 @@ from datetime import datetime
 from time import sleep
 from urllib.parse import quote
 
-import requests
+import urllib3
 from requests import Request, Session
 
-import urllib3
 urllib3.util.url.QUERY_CHARS |= {'%'}
 
 # from http.client import HTTPConnection
@@ -31,7 +30,6 @@ REQ_HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
     'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
     'Referer': MAIN_URL,
     'Upgrade-Insecure-Requests': '1',
     'Sec-Fetch-Site': 'cross-site',
@@ -46,14 +44,14 @@ REQ2_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Connection': 'keep-alive',
     'Origin': ORIGIN,
     'Referer': URL,
     'Sec-Fetch-Site': 'same-origin',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Dest': 'empty'
 }
-img_name_template = '/tmp/data/atom.{0}.jpg'
+DATA_PATH = '/tmp/data'
+img_name_template = f'{DATA_PATH}/atom.{0}.jpg'
 
 
 def main():
@@ -61,17 +59,16 @@ def main():
     req = Request(method='GET', params=GET_PARAMS, url=URL, headers=REQ_HEADERS)
     preped = req.prepare()
     preped.url = preped.url.replace('%25', '%')
-    response = s.send(preped)
+    s.send(preped)
 
     try:
-        cookies = response.cookies or {}
         post_data = {
             'url': f'{quote(SRC_URL, safe="")}',
             'camid': 43
         }
         sleep(0.1)
-        response = requests.post(url=f'{ORIGIN}/updimg', data=post_data, headers=REQ2_HEADERS,
-                                 cookies=cookies)
+        req = Request(method='POST', url=f'{ORIGIN}/updimg', data=post_data, headers=REQ2_HEADERS)
+        response = s.send(req.prepare())
         resp_obj = json.loads(response.content.decode())
         imgdata = base64.b64decode(resp_obj['SnapshotImg'])
         os.makedirs(img_name_template[:img_name_template.rindex('/')], exist_ok=True)
