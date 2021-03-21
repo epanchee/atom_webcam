@@ -49,23 +49,29 @@ REQ2_HEADERS = {
     'Sec-Fetch-Dest': 'empty'
 }
 DATA_PATH = '/tmp/data'
-img_name_template = f'{DATA_PATH}/atom.{{0}}.jpg'
 DEBUG = False
 log = None
 
 
-def setup_logger(debug=False):
-    logger = logging.getLogger(__name__)
+def setup_logger(debug=False, name=''):
+    logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
     if debug:
         from http.client import HTTPConnection
         HTTPConnection.debuglevel = 1
-    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s')
+    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s',
+                        filename='/var/log/atom_webcam.log')
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG if debug else logging.INFO)
+    formatter = logging.Formatter('%(name)s: %(asctime)s %(message)s')
+    console.setFormatter(formatter)
+    logger.addHandler(console)
     return logger
 
 
 def main():
-    log = setup_logger(DEBUG)
+    img_name_template = f'{DATA_PATH}/atom.{{0}}.jpg'
+    log = setup_logger(debug=DEBUG, name=__file__)
     s = Session()
     req = Request(method='GET', params=GET_PARAMS, url=URL, headers=REQ_HEADERS)
     preped = req.prepare()

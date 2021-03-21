@@ -1,18 +1,9 @@
-import logging
 from argparse import ArgumentParser
 from time import sleep
 
 import webcam
 
 log = None
-
-
-def setup_logger(debug=False):
-    logger = logging.getLogger(__file__)
-    logger.setLevel(logging.DEBUG if debug else logging.INFO)
-    logging.basicConfig(format='%(name)s: %(asctime)s %(message)s')
-    return logger
-
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -28,7 +19,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     webcam.DATA_PATH = args.data_path
     webcam.DEBUG = args.debug
-    log = setup_logger(args.debug)
+    log = webcam.setup_logger(debug=args.debug, name=__file__)
 
     while True:
         try:

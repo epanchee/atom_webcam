@@ -1,0 +1,11 @@
+/var/log/atom_webcam.log {
+    rotate 30
+    size=1M
+    missingok
+    notifempty
+    daily
+    compress
+    delaycompress
+    maxage 30
+    create 0644 root root
+}

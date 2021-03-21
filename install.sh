@@ -6,17 +6,23 @@ envsubst --version &> /dev/null
 
 declare USER="${1:-$(whoami)}"
 declare INTERVAL="${2:-600}"
-declare WORKDIR="${3:-$(pwd)}"
-declare SAVE_PATH="${4:-$(pwd)/data}"
+declare DEBUG="${3:-}"
+declare WORKDIR="${4:-$(pwd)}"
+declare SAVE_PATH="${5:-$(pwd)/data}"
 
-export USER WORKDIR INTERVAL SAVE_PATH
-envsubst '$USER,$WORKDIR,$INTERVAL,$SAVE_PATH' <atom_webcam.service.tmplt > /etc/systemd/system/atom_webcam.service
+systemctl stop atom_webcam.service
 
-echo "Теперь нужно запустить:"
+export USER WORKDIR INTERVAL SAVE_PATH DEBUG
+envsubst '$USER,$WORKDIR,$DEBUG,$INTERVAL,$SAVE_PATH' <atom_webcam.service.tmplt > /etc/systemd/system/atom_webcam.service
 
-echo "sudo systemctl enable atom_webcam.service"
-echo "sudo systemctl start atom_webcam.service"
+touch /var/log/atom_webcam.log
+chown "$USER:$USER" /var/log/atom_webcam.log
 
-echo "И проверить, что все хорошо:"
+unlink /etc/logrotate.d/atom_webcam &>/dev/null || true
+ln -s "$(pwd)/logrotate" /etc/logrotate.d/atom_webcam
+systemctl enable atom_webcam.service
+systemctl start atom_webcam.service
+
+echo "Проверьте, что все хорошо запустилось:"
 echo "sudo systemctl status atom_webcam.service"
 
