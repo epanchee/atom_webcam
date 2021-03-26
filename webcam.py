@@ -1,9 +1,9 @@
 import base64
+from _datetime import datetime
 import json
 import logging
 import os
 import sys
-from datetime import datetime
 from time import sleep
 from urllib.parse import quote
 
@@ -82,7 +82,8 @@ def setup_logger(debug=False, name=''):
 
 
 def main():
-    img_name_template = f'{DATA_PATH}/atom.{{0}}.jpg'
+    now = datetime.now()
+    img_name_template = f'{DATA_PATH}/{now.strftime("%d%m%y")}/atom.{{0}}.jpg'
     log = setup_logger(debug=DEBUG, name=__file__)
     s = Session()
     req = Request(method='GET', params=GET_PARAMS, url=URL, headers=REQ_HEADERS)
@@ -103,7 +104,7 @@ def main():
         resp_obj = json.loads(response.content.decode())
         imgdata = base64.b64decode(resp_obj['SnapshotImg'])
         os.makedirs(img_name_template[:img_name_template.rindex('/')], exist_ok=True)
-        img_path = img_name_template.format(int(datetime.now().timestamp()))
+        img_path = img_name_template.format(int(now.timestamp()))
         log.debug(f"Сохраняем картинку в {img_path}")
         with open(img_path, 'wb') as f:
             f.write(imgdata)
