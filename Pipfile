@@ -5,8 +5,5 @@ name = "pypi"
 
 [packages]
 requests = "2.25.1"
-
-[dev-packages]
-
-[requires]
-python_version = "3.9"
+uwsgi = "*"
+flask = "*"

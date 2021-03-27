@@ -1,0 +1,12 @@
+[Unit]
+Description=uWSGI instance to serve atom.webcam
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/atom_webcam/web
+ExecStart=/usr/local/bin/uwsgi --ini atom_web.ini
+
+[Install]
+WantedBy=multi-user.target
