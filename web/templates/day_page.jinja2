@@ -1,0 +1,7 @@
+{% extends "base.jinja2" %}
+{% block content %}
+{{ super() }}
+    {% for img_path in images %}
+        <img src="/images/{{ day }}/{{ img_path }}"/>
+    {% endfor %}
+{% endblock %}
