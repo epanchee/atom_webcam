@@ -5,6 +5,8 @@ After=network.target
 [Service]
 User=www-data
 Group=www-data
+After=nginx.service
+Wants=nginx.service
 WorkingDirectory=/opt/atom_webcam/web
 ExecStart=/usr/local/bin/uwsgi --ini atom_web.ini
 
