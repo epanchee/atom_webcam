@@ -3,9 +3,9 @@
 {{ super() }}
     <div class="container">
         {%- for img_path in images -%}
-            <div class="img_container">
-                <img src="/images/{{ day }}/{{ img_path }}"/>
-            </div>
+            <figure class="img_container">
+                <img src="/static/images/{{ day }}/{{ img_path }}"/>
+            </figure>
         {%- endfor -%}
     </div>
     <div class="rightbar">

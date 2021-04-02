@@ -1,10 +1,10 @@
 :root {
-    --images-number: 5
+    --images-number: 4
 }
 
 @media (max-width: 800px) {
     :root {
-        --images-number: 3
+        --images-number: 2
     }
 }
 
@@ -38,7 +38,7 @@ nav * {
 }
 
 .img_container {
-    width: calc((100% - 50px)/var(--images-number));
+    width: calc((100% - 5rem)/var(--images-number));
 }
 
 .container {
