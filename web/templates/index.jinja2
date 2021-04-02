@@ -1,7 +1,7 @@
 {% extends "base.jinja2" %}
 {% block content %}
 {{ super() }}
-    <ul>
+    <ul class="day_ul">
     {% for date in dates %}
         <li><a href="/show_day/{{ date }}">{{ date }}</a></li>
     {% endfor %}

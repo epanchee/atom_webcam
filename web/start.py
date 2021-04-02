@@ -1,5 +1,6 @@
 import os
 from argparse import ArgumentParser
+from datetime import datetime
 
 from flask import Flask, render_template
 
@@ -21,10 +22,11 @@ app = init_app()
 
 @app.route("/")
 def index():
-    date_folders = sorted([
+    date_folders = [
         _dir for _dir in os.listdir(app.config['data_folder'])
         if os.path.isdir(os.path.join(app.config['data_folder'], _dir))
-    ])
+    ]
+    date_folders.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
     return render_template('index.jinja2', dates=date_folders)
 
 
@@ -35,6 +37,7 @@ def show_day(day: str):
         item for item in os.listdir(images_path)
         if os.path.isfile(os.path.join(images_path, item))
     ]
+    images.sort()
     return render_template('day_page.jinja2', day=day, images=images)
 
 
