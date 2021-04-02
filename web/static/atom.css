@@ -19,6 +19,12 @@
     margin-top: var(--universal-margin);
 }
 
+.rightbar {
+    width: 15%;
+    float: left;
+    margin-top: var(--universal-margin);
+}
+
 nav {
     border: none;
 }
@@ -36,6 +42,8 @@ nav * {
 }
 
 .container {
+    width: 82%;
+    float: left;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
