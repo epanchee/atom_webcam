@@ -2,11 +2,11 @@
 {% block content %}
 {{ super() }}
     <div class="container">
-        {%- for img_path in images -%}
-            <figure class="img_container">
+        {%- for img_path in images %}
+            <figure class="img_container popup">
                 <img src="/static/images/{{ day }}/{{ img_path }}"/>
             </figure>
-        {%- endfor -%}
+        {%- endfor %}
     </div>
     <div class="rightbar">
         {% include "rightbar.jinja2" %}
