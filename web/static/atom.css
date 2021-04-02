@@ -1,5 +1,30 @@
-.day_ul {
-    list-style-type: none;
+:root {
+    --images-number: 5
+}
+
+@media (max-width: 800px) {
+    :root {
+        --images-number: 3
+    }
+}
+
+.menu {
+    width: 24%;
+    float: left;
+}
+
+.main {
+    width: 74%;
+    float: left;
+    margin-top: var(--universal-margin);
+}
+
+nav {
+    border: none;
+}
+
+nav * {
+    text-align: center;
 }
 
 .img_container img {
@@ -7,14 +32,11 @@
 }
 
 .img_container {
-    width: 24%;
+    width: calc((100% - 50px)/var(--images-number));
 }
 
 .container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    padding: 0;
-    margin: 0;
-    width: 75%;
 }

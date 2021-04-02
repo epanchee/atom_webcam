@@ -1,0 +1,5 @@
+<nav>
+{% for date in list_day_folders() %}
+    <a href="/show_day/{{ date }}">{{ date }}</a>
+{% endfor %}
+</nav>

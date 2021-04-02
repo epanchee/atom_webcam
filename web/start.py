@@ -5,6 +5,15 @@ from datetime import datetime
 from flask import Flask, render_template
 
 
+def list_day_folders():
+    date_folders = [
+        _dir for _dir in os.listdir(app.config['data_folder'])
+        if os.path.isdir(os.path.join(app.config['data_folder'], _dir))
+    ]
+    date_folders.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
+    return date_folders
+
+
 def init_app():
     parser = ArgumentParser()
     parser.add_argument(
@@ -14,6 +23,7 @@ def init_app():
     args = parser.parse_args()
     new_app = Flask(__name__, template_folder='templates')
     new_app.config.update(args.__dict__)
+    new_app.jinja_env.globals.update(list_day_folders=list_day_folders)
     return new_app
 
 
@@ -22,12 +32,7 @@ app = init_app()
 
 @app.route("/")
 def index():
-    date_folders = [
-        _dir for _dir in os.listdir(app.config['data_folder'])
-        if os.path.isdir(os.path.join(app.config['data_folder'], _dir))
-    ]
-    date_folders.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
-    return render_template('index.jinja2', dates=date_folders)
+    return render_template('index.jinja2')
 
 
 @app.route("/show_day/<day>")
