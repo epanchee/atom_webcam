@@ -2,7 +2,7 @@
     cursor: pointer
 }
 .show{
-    z-index: 999;
+    z-index: 1;
     display: none;
 }
 .show .overlay{
@@ -23,17 +23,27 @@
     transform: translate(-50%,-50%);
     overflow: hidden
 }
-.img-show span{
+.image_btns * {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 99;
     cursor: pointer;
+    color: white;
+}
+.image_btns i.fa-times{
+    top: 1%;
+    right: 1%;
+}
+.image_btns i[class*="fa-arrow"]{
+    top: 50%;
+}
+.image_btns i.fa-arrow-left{
+    left: 1%;
+}
+.image_btns i.fa-arrow-right{
+    right: 1%;
 }
 .img-show img{
     width: 100%;
     height: 100%;
-    position: absolute;
     top: 0;
     left: 0;
 }
