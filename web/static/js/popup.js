@@ -2,9 +2,9 @@ $(function () {
     "use strict";
 
     $(".popup img").click(function () {
-        var $src = $(this).attr("src");
+        let src = $(this).attr("src");
         $(".show").fadeIn();
-        $(".img-show img").attr("src", $src);
+        $(".img-show img").attr("src", src);
     });
 
     $(".image_btns i.fa-times, .overlay").click(function () {
