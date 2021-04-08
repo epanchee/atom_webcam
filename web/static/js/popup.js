@@ -24,8 +24,8 @@ $(function () {
     $(document).on('keydown', function(e) {
         let image_controls = {
             27: '.close-image',
-            37: '.next-image',
-            39: '.prev-image'
+            37: '.prev-image',
+            39: '.next-image'
         }
         if (Object.keys(image_controls).includes(e.keyCode + "") && $(".show").is(":visible"))
             $(image_controls[e.keyCode]).click()
