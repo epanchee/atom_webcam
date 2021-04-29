@@ -25,6 +25,20 @@ def list_day_folders():
     return aggregated_folders
 
 
+# да, это мерзко, но .strftime("%B %y") дает мне название в склонённой форме,
+# а мне нужно в именительном падеже
+ru_monthes = dict(
+    enumerate([
+        'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+        'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    ])
+)
+
+
+def month_to_human_view(value):
+    return ru_monthes[datetime.strptime(value, "%m%y").month - 1]
+
+
 def init_app():
     parser = ArgumentParser()
     parser.add_argument(
@@ -34,6 +48,7 @@ def init_app():
     args = parser.parse_args()
     new_app = Flask(__name__, template_folder='templates')
     new_app.config.update(args.__dict__)
+    new_app.jinja_env.filters['month2human_view'] = month_to_human_view
     return new_app
 
 
