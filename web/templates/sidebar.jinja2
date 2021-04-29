@@ -1,5 +1,5 @@
 <nav>
-{% for month, dates in day_folders_dict|dictsort %}
+{% for month, dates in list_day_folders()|dictsort %}
     <a href="#collapse_{{ month }}" data-toggle="collapse">{{ month|month2human_view }} <i class="fa fa-caret-down"></i></a>
     <div id="collapse_{{ month }}" class="collapse">
         {%- for date in dates %}

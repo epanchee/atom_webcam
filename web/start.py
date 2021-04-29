@@ -49,6 +49,7 @@ def init_app():
     new_app = Flask(__name__, template_folder='templates')
     new_app.config.update(args.__dict__)
     new_app.jinja_env.filters['month2human_view'] = month_to_human_view
+    new_app.jinja_env.globals.update(list_day_folders=list_day_folders)
     return new_app
 
 
@@ -68,10 +69,8 @@ def show_day(day: str):
         if os.path.isfile(os.path.join(images_path, item))
     ]
     images.sort()
-    return render_template(
-        'day_page.jinja2', day=day, images=images, day_folders_dict=list_day_folders()
-    )
+    return render_template('day_page.jinja2', day=day, images=images)
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
