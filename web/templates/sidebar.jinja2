@@ -1,5 +1,10 @@
 <nav>
-{% for date in list_day_folders() %}
-    <a href="/show_day/{{ date }}">{{ date }}</a>
+{% for month, dates in day_folders_dict|dictsort %}
+    <a href="#collapse_{{ month }}" data-toggle="collapse">{{ month }} <i class="fa fa-caret-down"></i></a>
+    <div id="collapse_{{ month }}" class="collapse">
+        {%- for date in dates %}
+            <a href="/show_day/{{ date }}">{{ date }}</a>
+        {%- endfor %}
+    </div>
 {% endfor %}
 </nav>

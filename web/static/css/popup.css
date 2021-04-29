@@ -1,11 +1,11 @@
 .popup img{
     cursor: pointer
 }
-.show{
+.showed{
     z-index: 1;
     display: none;
 }
-.show .overlay{
+.showed .overlay{
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,.66);
@@ -13,7 +13,7 @@
     top: 0;
     left: 0;
 }
-.show .img-show{
+.showed .img-show{
     width: calc(16rem * var(--scale-factor));
     height: calc(9rem * var(--scale-factor));
     background: #FFF;

@@ -3,7 +3,7 @@ $(function () {
 
     $(".popup img").click(function () {
         let src = $(this).attr("src");
-        $(".show").fadeIn();
+        $(".showed").fadeIn();
         $(".img-show img").attr("src", src);
     });
 
@@ -18,7 +18,7 @@ $(function () {
     })
 
     $(".close-image, .overlay").click(function () {
-        $(".show").fadeOut();
+        $(".showed").fadeOut();
     });
 
     $(document).on('keydown', function(e) {
@@ -27,7 +27,7 @@ $(function () {
             37: '.prev-image',
             39: '.next-image'
         }
-        if (Object.keys(image_controls).includes(e.keyCode + "") && $(".show").is(":visible"))
+        if (Object.keys(image_controls).includes(e.keyCode + "") && $(".showed").is(":visible"))
             $(image_controls[e.keyCode]).click()
     });
 

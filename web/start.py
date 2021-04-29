@@ -1,17 +1,28 @@
 import os
 from argparse import ArgumentParser
 from datetime import datetime
+from itertools import groupby
 
 from flask import Flask, render_template
 
 
 def list_day_folders():
-    date_folders = [
+    all_date_folders = [
         _dir for _dir in os.listdir(app.config['data_folder'])
         if os.path.isdir(os.path.join(app.config['data_folder'], _dir))
     ]
-    date_folders.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
-    return date_folders
+
+    aggregated_folders = dict()
+
+    for key, val in groupby(
+            all_date_folders, key=lambda x: datetime.strptime(x, "%d%m%y").strftime("%m%y")
+    ):
+        aggregated_folders.setdefault(key, [])
+        aggregated_folders[key].extend(list(val))
+
+    for val in aggregated_folders.values():
+        val.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
+    return aggregated_folders
 
 
 def init_app():
@@ -23,7 +34,6 @@ def init_app():
     args = parser.parse_args()
     new_app = Flask(__name__, template_folder='templates')
     new_app.config.update(args.__dict__)
-    new_app.jinja_env.globals.update(list_day_folders=list_day_folders)
     return new_app
 
 
@@ -43,7 +53,9 @@ def show_day(day: str):
         if os.path.isfile(os.path.join(images_path, item))
     ]
     images.sort()
-    return render_template('day_page.jinja2', day=day, images=images)
+    return render_template(
+        'day_page.jinja2', day=day, images=images, day_folders_dict=list_day_folders()
+    )
 
 
 if __name__ == "__main__":
