@@ -71,7 +71,11 @@ def setup_logger(debug=False, name=''):
     logger = logging.getLogger(name)
     log_level = logging.DEBUG if debug else logging.INFO
     sh = logging.StreamHandler()
-    fh = logging.FileHandler('/var/log/atom_webcam.log')
+    logfile = '/var/log/atom_webcam.log'
+    if not os.access(logfile, os.W_OK):
+        print(f'Файл {logfile} недоступен для записи. Пишем лог прямо в папке запуска')
+        logfile = 'atom_webcam.log'
+    fh = logging.FileHandler(logfile)
     logging.basicConfig(format='%(name)s: %(asctime)s %(message)s', level=log_level,
                         handlers=[sh, fh])
     if debug:
