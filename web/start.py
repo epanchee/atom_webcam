@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from datetime import datetime
 from itertools import groupby
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 
 
 def list_day_folders():
@@ -28,8 +28,8 @@ def list_day_folders():
 # да, это мерзко, но .strftime("%B %y") дает мне название в склонённой форме,
 # а мне нужно в именительном падеже
 ru_monthes = [
-        'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
-        'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+    'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
 ]
 
 
@@ -56,7 +56,8 @@ app = init_app()
 
 @app.route("/")
 def index():
-    return render_template('index.jinja2')
+    today = datetime.now().strftime("%d%m%y")
+    return redirect(url_for('show_day', day=today))
 
 
 @app.route("/show_day/<day>")
