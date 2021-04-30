@@ -35,6 +35,11 @@ nav * {
     text-align: center;
 }
 
+nav .active {
+    text-decoration: none;
+    background: var(--nav-hover-back-color)
+}
+
 .img_container img {
     object-fit: cover;
 }
