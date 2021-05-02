@@ -15,16 +15,43 @@
     float: left;
 }
 
+.menu a {
+    font-size: 1rem;
+}
+
 .main {
     width: 74%;
     float: left;
     margin-top: var(--universal-margin);
 }
 
+.container {
+    width: 82%;
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
 .rightbar {
     width: 15%;
     float: left;
     margin-top: var(--universal-margin);
+}
+
+@media (max-width: 800px) {
+    .menu {
+        width: 35%;
+    }
+    .main {
+        width: 64%;
+    }
+    .rightbar {
+        width: 82%;
+    }
+    .container {
+        width: 100%;
+    }
 }
 
 nav {
@@ -45,13 +72,5 @@ nav .active {
 }
 
 .img_container {
-    width: calc((100% - 5rem)/var(--images-number));
-}
-
-.container {
-    width: 82%;
-    float: left;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    width: calc((100% - 3rem)/var(--images-number));
 }
