@@ -50,6 +50,10 @@ def to_human_dm(date_str):
     return datetime.strptime(date_str, "%d%m%y").strftime("%d %B")
 
 
+def today():
+    return datetime.now().strftime("%d%m%y")
+
+
 def init_app():
     parser = ArgumentParser()
     parser.add_argument(
@@ -67,6 +71,7 @@ def init_app():
     )
     new_app.jinja_env.globals.update(
         list_day_folders=list_day_folders,
+        today=today,
         MAIN_TITLE='Atom Webcam Gallery'
     )
     locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
@@ -78,8 +83,7 @@ app = init_app()
 
 @app.route("/")
 def index():
-    today = datetime.now().strftime("%d%m%y")
-    return redirect(url_for('show_day', day=today))
+    return redirect(url_for('show_day', day=today()))
 
 
 @app.route("/show_day/<day>")

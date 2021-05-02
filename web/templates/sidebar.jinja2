@@ -1,3 +1,6 @@
+<a role="button" href="{{ url_for('index') }}" class="btn btn-primary btn-lg btn-block today_button {% if day == today() %}disabled{% endif %}">
+    Вернуться на текущий день <i class="fa fa-undo"></i>
+</a>
 <nav>
 {% for month, dates in list_day_folders()|dictsort %}
     <a href="#collapse_{{ month }}" data-toggle="collapse"><i class="fa fa-caret-down"></i>{{ month|month2human_view }}</a>
