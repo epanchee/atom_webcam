@@ -1,12 +1,10 @@
 :root {
     --images-number: 4;
-    --scale-factor: 5;
 }
 
 @media (max-width: 800px) {
     :root {
         --images-number: 2;
-        --scale-factor: 1.2;
     }
 }
 
