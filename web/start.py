@@ -1,3 +1,4 @@
+import locale
 import os
 from argparse import ArgumentParser
 from datetime import datetime
@@ -41,6 +42,14 @@ def get_month_by_day(day):
     return datetime.strptime(day, "%d%m%y").strftime("%m%y")
 
 
+def to_human_dmy(date_str):
+    return datetime.strptime(date_str, "%d%m%y").strftime("%d %B %Y")
+
+
+def to_human_dm(date_str):
+    return datetime.strptime(date_str, "%d%m%y").strftime("%d %B")
+
+
 def init_app():
     parser = ArgumentParser()
     parser.add_argument(
@@ -52,9 +61,15 @@ def init_app():
     new_app.config.update(args.__dict__)
     new_app.jinja_env.filters.update(
         month2human_view=month_to_human_view,
-        get_month_by_day=get_month_by_day
+        get_month_by_day=get_month_by_day,
+        to_human_dmy=to_human_dmy,
+        to_human_dm=to_human_dm
     )
-    new_app.jinja_env.globals.update(list_day_folders=list_day_folders)
+    new_app.jinja_env.globals.update(
+        list_day_folders=list_day_folders,
+        MAIN_TITLE='Atom Webcam Gallery'
+    )
+    locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
     return new_app
 
 
