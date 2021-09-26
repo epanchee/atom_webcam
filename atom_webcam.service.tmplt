@@ -8,7 +8,8 @@ Restart=always
 RestartSec=5
 User=$USER
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/bin/python $WORKDIR/run.py -i $INTERVAL -d $SAVE_PATH $DEBUG
+WorkingDirectory=$WORKDIR
+ExecStart=/usr/local/bin/pipenv run python $WORKDIR/run.py -i $INTERVAL -d $SAVE_PATH $DEBUG
 PIDFile=$WORKDIR/atom.pid
 TimeoutSec=10
 
