@@ -2,7 +2,7 @@
 
 set -eu
 
-if [ ! envsubst --version &> /dev/null ]; then
+if ! envsubst --version &> /dev/null; then
 	echo "Нужно установить пакет 'gettext'"
 	exit 1
 fi
