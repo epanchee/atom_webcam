@@ -29,6 +29,7 @@ systemctl enable atom_webcam.service
 
 cp -av web/nginx.conf /etc/nginx/sites-available/atom_web.conf
 ln -s /etc/nginx/sites-available/atom_web.conf /etc/nginx/sites-enabled/ || true
+ln -s "$PWD/web/atom_web.service" /etc/systemd/system/atom_web.service || true
 systemctl enable atom_web.service
 
 systemctl start atom_webcam.service
