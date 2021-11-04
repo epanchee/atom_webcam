@@ -77,7 +77,8 @@ def init_app():
     )
     locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
     new_app.config.update({
-        "CACHE_TYPE": "SimpleCache",
+        "CACHE_TYPE": "FileSystemCache",
+        "CACHE_DIR": 'cache',
         "CACHE_DEFAULT_TIMEOUT": 300
     })
     return new_app
