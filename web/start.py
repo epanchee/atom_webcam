@@ -5,6 +5,7 @@ from datetime import datetime
 from itertools import groupby
 
 from flask import Flask, render_template, redirect, url_for
+from flask_caching import Cache
 
 
 def list_day_folders():
@@ -75,10 +76,16 @@ def init_app():
         MAIN_TITLE='Atom Webcam Gallery'
     )
     locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
+    new_app.config.update({
+        "CACHE_TYPE": "SimpleCache",
+        "CACHE_DEFAULT_TIMEOUT": 300
+    })
     return new_app
 
 
 app = init_app()
+cache = Cache(app)
+cache.init_app(app)
 
 
 @app.route("/")
@@ -87,6 +94,7 @@ def index():
 
 
 @app.route("/show_day/<day>")
+@cache.cached(timeout=None, unless=lambda _, day=None: day and day == today())
 def show_day(day: str):
     images_path = os.path.join(app.config['data_folder'], day)
     images = [
