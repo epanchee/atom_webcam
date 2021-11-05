@@ -79,7 +79,6 @@ def init_app():
     new_app.config.update({
         "CACHE_TYPE": "FileSystemCache",
         "CACHE_DIR": 'cache',
-        "CACHE_DEFAULT_TIMEOUT": 300
     })
     return new_app
 
@@ -98,11 +97,13 @@ def index():
 @cache.cached(timeout=None, unless=lambda _, day=None: day and day == today())
 def show_day(day: str):
     images_path = os.path.join(app.config['data_folder'], day)
-    images = [
-        item for item in os.listdir(images_path)
-        if os.path.isfile(os.path.join(images_path, item))
-    ]
-    images.sort()
+    images = None
+    if os.path.exists(images_path):
+        images = [
+            item for item in os.listdir(images_path)
+            if os.path.isfile(os.path.join(images_path, item))
+        ]
+        images.sort()
     return render_template('day_page.jinja2', day=day, images=images)
 
 

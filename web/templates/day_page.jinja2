@@ -3,11 +3,15 @@
 {% block content %}
 {{ super() }}
     <div class="container">
+        {%- if not images  %}
+            <div>В этот день сбора данных еще не производилось</div>
+        {%- else  %}
         {%- for img_path in images %}
             <figure class="img_container popup">
                 <img src="/static/images/{{ day }}/{{ img_path }}"/>
             </figure>
         {%- endfor %}
+        {%- endif %}
     </div>
     <div class="rightbar">
         {% include "rightbar.jinja2" %}
