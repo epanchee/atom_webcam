@@ -2,6 +2,7 @@ import locale
 import os
 from argparse import ArgumentParser
 from datetime import datetime
+from functools import reduce
 from itertools import groupby
 
 from flask import Flask, render_template, redirect, url_for
@@ -93,8 +94,23 @@ def index():
     return redirect(url_for('show_day', day=today()))
 
 
+def need_caching(day):
+    if day == today():
+        return True
+    images_path = os.path.join(app.config['data_folder'], day)
+    if os.path.exists(images_path):
+        images = [os.path.join(images_path, image) for image in os.listdir(images_path)]
+        count = reduce(lambda acc, item: acc + 1 if os.path.isfile(item) else acc, images, 0)
+        cached_count = cache.get(day)
+        if count and cached_count != count:
+            cache.set(day, count)
+            return True
+
+    return False
+
+
 @app.route("/show_day/<day>")
-@cache.cached(timeout=None, unless=lambda _, day=None: day and day == today())
+@cache.cached(timeout=None, unless=lambda _, day=None: day and need_caching(day))
 def show_day(day: str):
     images_path = os.path.join(app.config['data_folder'], day)
     images = None
