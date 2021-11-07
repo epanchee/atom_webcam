@@ -85,6 +85,17 @@ def setup_logger(debug=False, name=''):
     return logger
 
 
+def send_retry(session, req, timeout, tries):
+    for i in range(tries):
+        try:
+            return session.send(req, timeout=timeout)
+        except Exception as e:
+            print(e)
+            sleep(i*timeout)
+
+    return None
+
+
 def main():
     now = datetime.now()
     img_name_template = f'{DATA_PATH}/{now.strftime("%d%m%y")}/atom.{{0}}.jpg'
@@ -94,7 +105,7 @@ def main():
     preped = req.prepare()
     preped.url = preped.url.replace('%25', '%')
     log.debug("Делаем первый запрос, чтобы установить куки")
-    s.send(preped)
+    send_retry(s, preped, 5, 5)
 
     try:
         post_data = {
@@ -104,7 +115,7 @@ def main():
         sleep(0.1)
         req = Request(method='POST', url=f'{ORIGIN}/updimg', data=post_data, headers=REQ2_HEADERS)
         log.debug("Делаем второй запрос, чтобы получить картинку")
-        response = s.send(req.prepare())
+        response = send_retry(s, req.prepare(), 5, 5)
         resp_obj = json.loads(response.content.decode())
         imgdata = base64.b64decode(resp_obj['SnapshotImg'])
         os.makedirs(img_name_template[:img_name_template.rindex('/')], exist_ok=True)
