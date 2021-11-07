@@ -17,8 +17,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--schedule', '-s', type=str,
-        help='JSON-файл с расписанием, по которому сохранять картинки',
-        default='/opt/atom_webcam/schedule.json'
+        help='JSON-файл с расписанием, по которому сохранять картинки'
     )
     parser.add_argument('--debug', action='store_true', help='Set log level to DEBUG')
     args = parser.parse_args()
