@@ -3,7 +3,6 @@ import os
 from argparse import ArgumentParser
 from datetime import datetime
 from functools import reduce
-from itertools import groupby
 
 from flask import Flask, render_template, redirect, url_for
 from flask_caching import Cache
@@ -17,14 +16,16 @@ def list_day_folders():
 
     aggregated_folders = dict()
 
-    for key, val in groupby(
-            all_date_folders, key=lambda x: datetime.strptime(x, "%d%m%y").strftime("%m%y")
-    ):
-        aggregated_folders.setdefault(key, [])
-        aggregated_folders[key].extend(list(val))
+    for folder_path in all_date_folders:
+        dt = datetime.strptime(folder_path, "%d%m%y")
+        aggregated_folders.setdefault(dt.year, dict())
+        aggregated_folders[dt.year].setdefault(dt.month, [])
+        aggregated_folders[dt.year][dt.month].append(folder_path)
 
-    for val in aggregated_folders.values():
-        val.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
+    for months in aggregated_folders.values():
+        for day in months.values():
+            day.sort(key=lambda date: datetime.strptime(date, "%d%m%y"))
+
     return aggregated_folders
 
 
@@ -37,11 +38,15 @@ ru_monthes = [
 
 
 def month_to_human_view(value):
-    return ru_monthes[datetime.strptime(value, "%m%y").month - 1]
+    return ru_monthes[value - 1]
 
 
 def get_month_by_day(day):
-    return datetime.strptime(day, "%d%m%y").strftime("%m%y")
+    return datetime.strptime(day, "%d%m%y").month
+
+
+def get_year_by_day(day):
+    return datetime.strptime(day, "%d%m%y").year
 
 
 def to_human_dmy(date_str):
@@ -68,6 +73,7 @@ def init_app():
     new_app.jinja_env.filters.update(
         month2human_view=month_to_human_view,
         get_month_by_day=get_month_by_day,
+        get_year_by_day=get_year_by_day,
         to_human_dmy=to_human_dmy,
         to_human_dm=to_human_dm
     )

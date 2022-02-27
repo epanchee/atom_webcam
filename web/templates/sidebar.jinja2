@@ -2,12 +2,17 @@
     Вернуться на текущий день <i class="fa fa-undo"></i>
 </a>
 <nav>
-{% for month, dates in list_day_folders()|dictsort %}
-    <a href="#collapse_{{ month }}" data-toggle="collapse"><i class="fa fa-caret-down"></i>{{ month|month2human_view }}</a>
-    <div id="collapse_{{ month }}" class="collapse {% if day and day|get_month_by_day == month %}show{%- endif %}">
-        {%- for date in dates %}
-            <a href="/show_day/{{ date }}" {%- if day == date %}class="active"{%- endif %}>{{ date|to_human_dm }}</a>
-        {%- endfor %}
+{% for year, months in list_day_folders()|dictsort %}
+    <a href="#collapse_{{ year }}" data-toggle="collapse"><i class="fa fa-caret-down"></i>{{ year }}</a>
+    <div id="collapse_{{ year }}" class="collapse {% if day and day|get_year_by_day == year %}show{%- endif %}">
+        {% for month, dates in months|dictsort %}
+            <a href="#collapse_{{ month }}" data-toggle="collapse"><i class="fa fa-caret-down"></i>{{ month|month2human_view }}</a>
+            <div id="collapse_{{ month }}" class="collapse {% if day and day|get_month_by_day == month %}show{%- endif %}">
+                {% for date in dates %}
+                    <a href="/show_day/{{ date }}" {%- if day == date %}class="active"{%- endif %}>{{ date|to_human_dm }}</a>
+                {%- endfor %}
+            </div>
+        {%- endfor  %}
     </div>
-{% endfor %}
+{%- endfor %}
 </nav>
