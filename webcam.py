@@ -1,16 +1,13 @@
 import base64
-from _datetime import datetime
 import json
 import logging
 import os
 import sys
+from _datetime import datetime
 from time import sleep
 from urllib.parse import quote
 
-import urllib3
 from requests import Request, Session
-
-urllib3.util.url.QUERY_CHARS |= {'%'}
 
 MAIN_URL = 'https://www.atomstroy.net'
 SRC_URL = f'{MAIN_URL}/zhilaya_nedvizhimost/art-gorod-park'
@@ -55,7 +52,7 @@ log = None
 
 
 class StdoutRedirector:
-    def __init__(self, logger=None, *args):
+    def __init__(self, logger=None):
         self.logger = logger
 
     def write(self, data):
@@ -88,10 +85,12 @@ def setup_logger(debug=False, name=''):
 def send_retry(session, req, timeout, tries):
     for i in range(tries):
         try:
-            return session.send(req, timeout=timeout)
+            return session.send(req, timeout=timeout, verify=False)
+            # Charles debug:
+            # return session.send(req, timeout=timeout, proxies={'https': 'http://localhost:8888'}, verify=False)
         except Exception as e:
             print(e)
-            sleep(i*timeout)
+            sleep(i * timeout)
 
     return None
 
